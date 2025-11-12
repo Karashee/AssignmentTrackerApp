@@ -1,47 +1,38 @@
 package com.example.assignmenttracker
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.assignmenttracker.ui.theme.AssignmentTrackerAppTheme
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var adapter: AssignmentAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            AssignmentTrackerAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        // Reference to RecyclerView and FAB
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+
+        // Sample assignment list
+        val assignments = mutableListOf(
+            Assignment("Mobile App UI", "Mobile Development", "Due: Nov 8"),
+            Assignment("Database Report", "Database Systems", "Due: Nov 10"),
+            Assignment("German Essay", "German 3", "Due: Nov 12")
+        )
+
+        // Connect adapter
+        adapter = AssignmentAdapter(assignments)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+
+        // Add new sample assignment when the "+" FAB is clicked
+        fab.setOnClickListener {
+            adapter.addSampleAssignment()
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AssignmentTrackerAppTheme {
-        Greeting("Android")
     }
 }
